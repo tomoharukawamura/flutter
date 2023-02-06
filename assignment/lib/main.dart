@@ -56,8 +56,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final controller = TextEditingController();
   int necessaryPeople = 0;
   bool isDecendingOrder = false;
-  List<String> isFavorite = [];
-  bool pickupFavorite = false;
 
   void _refresh() async {
     var url = Uri.parse(
@@ -86,12 +84,6 @@ class _MyHomePageState extends State<MyHomePage> {
         }
       }
 
-      if (pickupFavorite) {
-        congestions = congestions
-            .where((e) => isFavorite.contains(e['space']['nameJa']))
-            .toList();
-      }
-
       cards = []; // ③ 通信が成功したのでカードリストを初期化
 
       for (Map<String, dynamic> congestion in congestions) {
@@ -109,18 +101,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Padding(
               padding: const EdgeInsets.all(10),
               child: ListTile(
-                  title: Text(info),
-                  onTap: () {
-                    if (isFavorite.contains(name)) {
-                      setState(() {
-                        isFavorite.remove(name);
-                      });
-                    } else {
-                      setState(() {
-                        isFavorite.add(name);
-                      });
-                    }
-                  }),
+                title: Text(info),
+              ),
             )),
           );
         });
@@ -192,18 +174,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                     ))
               ])),
-          Row(
-            children: [
-              Checkbox(
-                  value: pickupFavorite,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      pickupFavorite = value!;
-                    });
-                  }),
-              const Text("お気に入りを表示")
-            ],
-          ),
           Flexible(
               child: ListView.builder(
             itemCount: cards.length,
